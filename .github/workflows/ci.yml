@@ -9,12 +9,17 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v3
+
+      # Update the Install Go step to use Go 1.20 or higher
       - name: Install Go
         run: |
-          sudo apt-get update
-          sudo apt-get install golang-go -y
+          wget https://golang.org/dl/go1.20.0.linux-amd64.tar.gz
+          sudo tar -C /usr/local -xzf go1.20.0.linux-amd64.tar.gz
+          export PATH=$PATH:/usr/local/go/bin
+
       - name: Build the app
         run: go build -o main .
+
       - name: Run tests
         run: go test ./...
 

@@ -4,12 +4,10 @@ import (
 	"context"
 	"fmt"
 	"net/http"
+	"os"
 
 	secretmanager "cloud.google.com/go/secretmanager/apiv1"
 )
-
-// Replace with your actual project ID
-var projectId = "go-app-414412"
 
 func handler(w http.ResponseWriter, r *http.Request) {
 	// Access secrets and use them securely
@@ -21,7 +19,8 @@ func handler(w http.ResponseWriter, r *http.Request) {
 	}
 
 	// Access GCP_PROJECT_ID
-	projectIDSecretName := "projects/" + projectId + "/secrets/GCP_PROJECT_ID/versions/latest"
+	projectID := os.Getenv("GCP_PROJECT_ID")
+	projectIDSecretName := "projects/" + projectID + "/secrets/GCP_PROJECT_ID/versions/latest"
 	accessRequest := &secretmanagerpb.AccessSecretRequest{Name: projectIDSecretName}
 	projectIDResult, err := client.AccessSecret(ctx, accessRequest)
 	if err != nil {
@@ -29,8 +28,9 @@ func handler(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	// Access GCP_SERVICE_ACCOUNT (consider using environment variables for this)
-	serviceAccountSecretName := "projects/" + projectId + "/secrets/GCP_SERVICE_ACCOUNT/versions/latest"
+	// Access GCP_SERVICE_ACCOUNT
+	serviceAccount := os.Getenv("GCP_SERVICE_ACCOUNT")
+	serviceAccountSecretName := "projects/" + projectID + "/secrets/" + serviceAccount + "/versions/latest"
 	accessRequest = &secretmanagerpb.AccessSecretRequest{Name: serviceAccountSecretName}
 	serviceAccountResult, err := client.AccessSecret(ctx, accessRequest)
 	if err != nil {

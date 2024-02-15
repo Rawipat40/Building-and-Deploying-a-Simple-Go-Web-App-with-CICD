@@ -30,14 +30,18 @@ jobs:
     steps:
     - name: Set up Google Cloud SDK
       uses: GoogleCloudPlatform/github-actions/setup-gcloud@v0.4.0
-      with:
-        service_account_key: ${{ secrets.GCP_SERVICE_ACCOUNT_KEY }}  # Use the key directly for security
-        project_id: ${{ secrets.GCP_PROJECT_ID }}
+
+    - name: Access secrets from Secret Manager
+      # Replace with your secure method
+      # (e.g., Secret Manager environment variables or secure library access)
+      run: |
+        GCP_PROJECT_ID=$(...)
+        GCP_SERVICE_ACCOUNT_KEY=$(...)
 
     - name: Deploy to App Engine
       uses: GoogleCloudPlatform/github-actions/deploy-appengine@v0.7.0
       with:
-        project_id: ${{ secrets.GCP_PROJECT_ID }}
+        project_id: ${{ env.GCP_PROJECT_ID }}  # Access environment variable
         service: "default"
         region: "us-central1"
         deployables: |

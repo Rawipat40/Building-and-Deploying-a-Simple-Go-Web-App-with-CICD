@@ -2,11 +2,12 @@ module example.com/go-app
 
 go 1.22
 
+require cloud.google.com/go/secretmanager v1.11.5
+
 require (
 	cloud.google.com/go/compute v1.24.0 // indirect
 	cloud.google.com/go/compute/metadata v0.2.3 // indirect
 	cloud.google.com/go/iam v1.1.6 // indirect
-	cloud.google.com/go/secretmanager v1.11.5 // indirect
 	github.com/felixge/httpsnoop v1.0.4 // indirect
 	github.com/go-logr/logr v1.4.1 // indirect
 	github.com/go-logr/stdr v1.2.2 // indirect

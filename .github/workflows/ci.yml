@@ -33,22 +33,22 @@ jobs:
           curl https://dl.google.com/dl/cloudsdk/release/google-cloud-sdk.tar.gz --output google-cloud-sdk.tar.gz
           tar -xvf google-cloud-sdk.tar.gz
           ./google-cloud-sdk/install.sh
-
+  
       - name: Configure Google Cloud SDK
         run: |
-          echo "$GCP_SERVICE_ACCOUNT_KEY" | base64 --decode > key.json
-          gcloud auth activate-service-account --key-file=key.json
+          echo "$GCP_SERVICE_ACCOUNT_KEY" | gcloud auth activate-service-account --key-file=-
           gcloud config set project "$GCP_PROJECT_ID"
-
+  
       - name: Access secrets from Secret Manager
         run: |
           gcloud secrets versions access latest --secret="GCP_PROJECT_ID" > project_id.txt
           export GCP_PROJECT_ID=$(cat project_id.txt)
-
+  
           # Access other secrets as needed, e.g.,
           # gcloud secrets versions access latest --secret="MY_OTHER_SECRET" > my_other_secret.txt
           # export MY_OTHER_SECRET=$(cat my_other_secret.txt)
-
+  
       - name: Deploy to App Engine
         run: |
           gcloud app deploy app.yaml --project="$GCP_PROJECT_ID"
+          

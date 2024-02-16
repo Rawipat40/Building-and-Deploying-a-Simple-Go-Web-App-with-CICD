@@ -36,11 +36,11 @@ jobs:
       # Secure access to service account key using secrets
       - name: Set project
         run: |
-          gcloud config set project ${{ secrets.MY_PROJECT_ID }}
+          gcloud config set project ${{ secrets.GCP_PROJECT_ID }}
 
       - name: Access service account key securely
         run: |
-          gcloud secrets versions access latest --secret="${{ secrets.MY_SECRET_NAME }}" > key.json
+          gcloud secrets versions access latest --secret="${{ secrets.SECRET_NAME }}" > key.json
           chmod 600 key.json
 
       - name: Authenticate with Google Cloud SDK

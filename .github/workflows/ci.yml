@@ -28,15 +28,15 @@ jobs:
     runs-on: ubuntu-latest
     needs: build-and-test
     steps:
-      - name: Decode service account key
+      - name: Set up Google Cloud SDK
+        uses: GoogleCloudPlatform/github-actions/setup-gcloud@v0.4.0
+  
+      - name: Access service account key securely
         run: |
-          echo "$GCP_SERVICE_ACCOUNT_KEY" | base64 --decode > key.json
-
+          gcloud secrets versions access latest --secret="SECRET_NAME" > key.json
+          chmod 600 key.json
+  
       - name: Authenticate with Google Cloud SDK
         run: |
           gcloud auth activate-service-account --key-file=key.json
           gcloud config set project "$GCP_PROJECT_ID"
-
-      - name: Deploy to App Engine
-        run: |
-          gcloud app deploy app.yaml --project="$GCP_PROJECT_ID"

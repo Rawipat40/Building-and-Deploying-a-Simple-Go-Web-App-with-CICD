@@ -34,7 +34,7 @@ jobs:
           tar -xvf google-cloud-sdk.tar.gz
           ./google-cloud-sdk/install.sh
 
-      - name: Create key.json file
+      - name: Decode service account key
         run: echo "${{ secrets.SECRET_NAME }}" | base64 --decode > key.json
 
       - name: Authenticate with Google Cloud SDK
@@ -46,4 +46,3 @@ jobs:
         run: |
           gcloud secrets versions access latest --secret="${{ secrets.SECRET_NAME }}" > key.json
           chmod 600 key.json
-

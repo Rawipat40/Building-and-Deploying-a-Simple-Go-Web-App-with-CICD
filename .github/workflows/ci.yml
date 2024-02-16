@@ -6,7 +6,23 @@ on:
 
 jobs:
   build-and-test:
-    # ... (unchanged steps)
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v2
+
+      - name: Set up Go
+        uses: actions/setup-go@v2
+        with:
+          go-version: 1.22
+
+      - name: Build the app
+        run: |
+          go build -o main go-app.go
+
+      - name: Run tests
+        run: |
+          go test ./...
 
   deploy-appengine:
     runs-on: ubuntu-latest

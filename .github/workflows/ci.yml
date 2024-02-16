@@ -44,5 +44,5 @@ jobs:
 
       - name: Access service account key securely
         run: |
-          gcloud secrets versions access latest --secret="${{ secrets.SECRET_NAME }}" > key.json
+          echo "${{ secrets.SECRET_NAME }}" > key.json
           chmod 600 key.json

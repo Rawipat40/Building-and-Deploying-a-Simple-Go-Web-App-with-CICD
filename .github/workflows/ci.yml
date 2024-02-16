@@ -36,9 +36,9 @@ jobs:
 
       - name: Access service account key securely
         run: |
-          gcloud secrets versions access latest --secret="SECRET_NAME" > key.json
+          gcloud secrets versions access latest --secret="projects/473829256314/secrets/test-gcp-secret-service-account" --project="$projects/473829256314/secrets/test-gcp-secret-project-id" > key.json
           chmod 600 key.json
-  
+
       - name: Authenticate with Google Cloud SDK
         run: |
           gcloud auth activate-service-account --key-file=key.json

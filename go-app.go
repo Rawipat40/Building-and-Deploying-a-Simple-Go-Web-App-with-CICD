@@ -8,6 +8,7 @@ import (
 	"os"
 
 	secretmanager "cloud.google.com/go/secretmanager/apiv1"
+	"cloud.google.com/go/secretmanager/apiv1/secretmanagerpb"
 	"google.golang.org/api/option"
 )
 
@@ -24,15 +25,16 @@ func handler(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	projectIDSecret, err := client.AccessSecretVersion(ctx, &secretmanager.AccessSecretVersionRequest{
+	projectIDSecret, err := client.AccessSecretVersion(ctx, &secretmanagerpb.AccessSecretVersionRequest{
 		Name: "projects/" + projectID + "/secrets/" + projectID + "/versions/latest",
 	})
+
 	if err != nil {
 		fmt.Printf("Error accessing project ID secret: %v", err)
 		return
 	}
 
-	serviceAccountSecret, err := client.AccessSecretVersion(ctx, &secretmanager.AccessSecretVersionRequest{
+	serviceAccountSecret, err := client.AccessSecretVersion(ctx, &secretmanagerpb.AccessSecretVersionRequest{
 		Name: "projects/" + projectID + "/secrets/" + secretName + "/versions/latest",
 	})
 	if err != nil {
@@ -43,9 +45,12 @@ func handler(w http.ResponseWriter, r *http.Request) {
 	// Use retrieved secrets for your application logic
 	fmt.Fprintf(w, "Hello, World from project %s!", string(projectIDSecret.Payload.Data))
 
-	// Access service account information if needed
-	serviceAccountEmail := string(serviceAccountSecret.Payload.Data)
-	// ... use serviceAccountEmail further
+	payloadData := serviceAccountSecret.Payload.Data
+	serviceAccountEmail := string(payloadData)
+	if serviceAccountEmail == "" {
+		fmt.Println("Error: Empty service account email")
+		return
+	}
 
 }
 

@@ -27,7 +27,6 @@ func handler(w http.ResponseWriter, r *http.Request) {
 	projectIDSecret, err := client.AccessSecretVersion(ctx, &secretmanagerpb.AccessSecretVersionRequest{
 		Name: "projects/" + projectID + "/secrets/" + projectID + "/versions/latest",
 	})
-
 	if err != nil {
 		fmt.Printf("Error accessing project ID secret: %v", err)
 		return
@@ -50,6 +49,8 @@ func handler(w http.ResponseWriter, r *http.Request) {
 		fmt.Println("Error: Empty service account email")
 		return
 	}
+
+	// Use serviceAccountEmail further...
 
 }
 

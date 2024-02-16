@@ -35,7 +35,7 @@ jobs:
           ./google-cloud-sdk/install.sh
 
       - name: Decode service account key
-        run: echo "${{ secrets.SECRET_NAME }}" | base64 --decode > key.json
+        run: echo -n "${{ secrets.SECRET_NAME }}" | base64 --decode > key.json
 
       - name: Authenticate with Google Cloud SDK
         run: |

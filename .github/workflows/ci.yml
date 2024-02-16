@@ -28,18 +28,24 @@ jobs:
     runs-on: ubuntu-latest
     needs: build-and-test
     steps:
-      - name: Install Google Cloud SDK
+      # ... (existing steps you might have, e.g., caching dependencies)
+
+      - name: Set up Google Cloud SDK
+        uses: GoogleCloudPlatform/github-actions/setup-gcloud@v0.4.0
+
+      # Secure access to service account key using secrets
+      - name: Set project
         run: |
-          curl https://dl.google.com/dl/cloudsdk/release/google-cloud-sdk.tar.gz --output google-cloud-sdk.tar.gz
-          tar -xvf google-cloud-sdk.tar.gz
-          ./google-cloud-sdk/install.sh
+          gcloud config set project ${{ secrets.MY_PROJECT_ID }}
 
       - name: Access service account key securely
         run: |
-          gcloud secrets versions access latest --secret="${{ secrets.MY_SECRET_NAME }}" --project="${{ secrets.MY_PROJECT_ID }}" > key.json
+          gcloud secrets versions access latest --secret="${{ secrets.MY_SECRET_NAME }}" > key.json
           chmod 600 key.json
 
       - name: Authenticate with Google Cloud SDK
         run: |
           gcloud auth activate-service-account --key-file=key.json
-          gcloud config set project "$GCP_PROJECT_ID"
+
+      # ... (remaining steps for your deployment)
+

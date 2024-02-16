@@ -1,36 +1,36 @@
-# Go App with Google Cloud Secret Manager Integration
+# CI/CD Pipeline with GitHub Actions workflow
 
-This Go application demonstrates integration with Google Cloud Secret Manager to securely access and use secrets in a web application deployed to Google App Engine. The application retrieves sensitive information such as the `GCP_PROJECT_ID` and `GCP_SERVICE_ACCOUNT` from Secret Manager and uses them securely in the application logic.
+This repository contains a Go application (`go-app.go`) and a GitHub Actions workflow (`ci.yml`) for setting up a secure CI/CD pipeline using Google Cloud services like Secret Manager and Google Cloud SDK.
 
-## Package Used
+## Go Application: `go-app.go`
 
-- `cloud.google.com/go/secretmanager/apiv1`: This package provides functionalities to interact with Google Cloud Secret Manager from a Go application. It allows the application to securely access and retrieve secrets stored in Secret Manager.
+The `go-app.go` file contains a simple Go web server that retrieves secrets from Google Secret Manager and uses them in the application logic. The main function starts an HTTP server listening on port 8080, with a handler function that retrieves secrets and responds with a "Hello, World!" message.
 
-## How to Use
+## GitHub Actions Workflow: `ci.yml`
 
-1. **Set Up Google Cloud Secret Manager:**
-   - Create a new secret in Google Cloud Secret Manager for each sensitive information your application needs to access (e.g., `GCP_PROJECT_ID`, `GCP_SERVICE_ACCOUNT`).
+The `ci.yml` GitHub Actions workflow sets up a CI/CD pipeline with the following jobs:
 
-2. **Update Project ID and Service Account in the Code:**
-   - Replace the placeholder `projectId` variable in `go-app.go` with your actual Google Cloud project ID.
-   - Update the `handler` function in `go-app.go` to use the retrieved secrets (`GCP_PROJECT_ID` and `GCP_SERVICE_ACCOUNT`) in your application logic.
+### 1. Build and Test
+- **Trigger:** Triggered on push events to the `main` branch.
+- **Steps:**
+  1. Checkout the repository.
+  2. Set up Go environment.
+  3. Build the Go application.
+  4. Run tests for the application.
 
-3. **GitHub Actions Workflow:**
-   - The provided GitHub Actions workflow (`ci.yml`) automates the build, test, and deployment process of the Go application to Google App Engine.
-   - Make sure to add your Google Cloud service account key as a secret named `GCP_SERVICE_ACCOUNT` in your GitHub repository.
+### 2. Deploy App Engine
+- **Trigger:** Depends on the success of the "Build and Test" job.
+- **Steps:**
+  1. Set the Google Cloud project using `gcloud config`.
+  2. Access the service account key securely from Secret Manager and save it as `key.json`.
+  3. Authenticate with Google Cloud SDK using the service account key.
+  
+## Usage
+To use this CI/CD pipeline for your project, follow these steps:
+1. Update the `go-app.go` file with your application logic.
+2. Configure the `ci.yml` file as needed, especially the environment variables for Google Cloud credentials.
+3. Commit and push your changes to the `main` branch.
 
-4. **Deploy to Google App Engine:**
-   - The deployment step in the workflow deploys the application to Google App Engine using the secrets retrieved from Secret Manager.
-
-## Deployment
-
-- The application is deployed to Google App Engine using Google Cloud's infrastructure.
-- The deployment is triggered automatically by pushing changes to the main branch of the GitHub repository.
-
-## Additional Notes
-
-- Ensure proper IAM permissions are assigned to the service account used for authentication with Google Cloud Secret Manager.
-- Consider using environment variables or other secure methods to manage sensitive information in production environments.
-
-Feel free to customize and extend the code and workflow according to your requirements.
-
+## Security Considerations
+- Ensure that sensitive information such as service account names and credentials are securely stored and managed, preferably using tools like Google Secret Manager.
+- Use least privilege access for service accounts and APIs to minimize the risk of unauthorized access.

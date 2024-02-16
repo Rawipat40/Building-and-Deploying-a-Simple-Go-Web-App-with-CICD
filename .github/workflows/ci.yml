@@ -28,10 +28,16 @@ jobs:
     runs-on: ubuntu-latest
     needs: build-and-test
     steps:
-      - name: Set up Google Cloud SDK
-        uses: GoogleCloudPlatform/github-actions/setup-gcloud@v0.4.0
-        with:
-          service_account_key: ${{ secrets.GCP_SERVICE_ACCOUNT_KEY }}  # Access key directly
+      - name: Install Google Cloud SDK
+        run: |
+          curl https://dl.google.com/dl/cloudsdk/release/google-cloud-sdk.tar.gz --output google-cloud-sdk.tar.gz
+          tar -xvf google-cloud-sdk.tar.gz
+          ./google-cloud-sdk/install.sh
+
+      - name: Configure Google Cloud SDK
+        run: |
+          gcloud auth activate-service-account --key-file=${{ secrets.GCP_SERVICE_ACCOUNT_KEY }}
+          gcloud config set project ${{ secrets.GCP_PROJECT_ID }}
 
       - name: Access secrets from Secret Manager
         run: |

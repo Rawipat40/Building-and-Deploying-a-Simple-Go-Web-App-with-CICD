@@ -30,18 +30,20 @@ jobs:
     permissions:
       contents: read
       id-token: write
+
     steps:
       - name: Set project
         run: gcloud config set project ${{ secrets.GCP_PROJECT_ID }}
-  
+
+      # Use Workload Identity for secure authentication (recommended)
+      # Replace placeholders and configure workload pool/provider correctly
       - name: Access service account key securely
         run: |
-          echo '${{ secrets.GCP_SERVICE_ACCOUNT_NAME }}' > key.json
+          gcloud secrets versions access latest --secret="${{ secrets.GCP_SERVICE_ACCOUNT_NAME }}" > key.json
           chmod 600 key.json
-  
+
       - name: Authenticate with Google Cloud SDK
         env:
-          GOOGLE_APPLICATION_CREDENTIALS: ./key.json
+           GOOGLE_APPLICATION_CREDENTIALS: ./key.json
         run: |
-          gcloud auth activate-service-account --key-file=./key.json
-          
+           gcloud auth activate-service-account --key-file=./key.json

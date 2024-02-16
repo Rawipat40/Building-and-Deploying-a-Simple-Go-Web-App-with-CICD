@@ -11,6 +11,12 @@ jobs:
       - name: Checkout repository
         uses: actions/checkout@v2
 
+      - name: Authenticate with GCP
+        run: |
+          echo ${{ secrets.GCP_SERVICE_ACCOUNT_NAME }} | base64 --decode > /tmp/gcp-key.json
+          gcloud auth activate-service-account --key-file=/tmp/gcp-key.json
+          gcloud config set project ${{ secrets.GCP_PROJECT_ID }}
+
       - name: Set up Go
         uses: actions/setup-go@v2
         with:
@@ -37,9 +43,11 @@ jobs:
   
       - name: Access service account key securely
         run: |
-          gcloud secrets versions access latest --secret="${{ secrets.GCP_SERVICE_ACCOUNT_NAME }}" --project="${{ secrets.GCP_PROJECT_ID }}" > key.json
+          echo '${{ secrets.GCP_SERVICE_ACCOUNT_NAME }}' | base64 --decode > key.json
           chmod 600 key.json
   
       - name: Set up Google Cloud SDK
         uses: google-github-actions/setup-gcloud@v1
+
+          
           

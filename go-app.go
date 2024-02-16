@@ -11,7 +11,11 @@ import (
 )
 
 func handler(w http.ResponseWriter, r *http.Request) {
-	// Access secrets using a client configured with application default credentials
+	// Retrieve secrets using environment variables injected by Cloud Code
+	projectID := os.Getenv("PROJECT_ID")
+	secretName := os.Getenv("GCP_SERVICE_ACCOUNT_NAME")
+
+	// Access secrets directly using the secret name
 	ctx := context.Background()
 	client, err := secretmanager.NewClient(ctx, option.WithCredentialsFile("path/to/credentials.json"))
 	if err != nil {
@@ -19,19 +23,19 @@ func handler(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	// Access secrets directly without redundant environment variable calls
 	projectIDSecret, err := client.AccessSecretVersion(ctx, &secretmanager.AccessSecretVersionRequest{
-		Name: "projects/" + os.Getenv("GCP_PROJECT_ID") + "/secrets/GCP_PROJECT_ID/versions/latest",
+		Name: "projects/" + projectID + "/secrets/" + projectID + "/versions/latest",
 	})
 	if err != nil {
-		fmt.Printf("Error accessing GCP_PROJECT_ID secret: %v", err)
+		fmt.Printf("Error accessing project ID secret: %v", err)
 		return
 	}
+
 	serviceAccountSecret, err := client.AccessSecretVersion(ctx, &secretmanager.AccessSecretVersionRequest{
-		Name: "projects/" + os.Getenv("GCP_PROJECT_ID") + "/secrets/" + os.Getenv("GCP_SERVICE_ACCOUNT") + "/versions/latest",
+		Name: "projects/" + projectID + "/secrets/" + secretName + "/versions/latest",
 	})
 	if err != nil {
-		fmt.Printf("Error accessing GCP_SERVICE_ACCOUNT secret: %v", err)
+		fmt.Printf("Error accessing service account secret: %v", err)
 		return
 	}
 

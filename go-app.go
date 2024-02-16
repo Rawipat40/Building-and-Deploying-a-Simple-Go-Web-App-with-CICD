@@ -1,6 +1,7 @@
 package main
 
 import (
+	// ... other imports
 	"context"
 	"fmt"
 	"net/http"
@@ -11,9 +12,9 @@ import (
 )
 
 func handler(w http.ResponseWriter, r *http.Request) {
-	// Retrieve secrets using environment variables injected by Cloud Code
-	projectID := os.Getenv("projects/473829256314/secrets/test-gcp-secret-project-id")
-	secretName := os.Getenv("projects/473829256314/secrets/test-gcp-secret-service-account")
+	// Retrieve secrets from environment variables
+	projectID := os.Getenv("GCP_PROJECT_ID")
+	secretName := os.Getenv("GCP_SERVICE_ACCOUNT_NAME")
 
 	// Access secrets directly using the secret name
 	ctx := context.Background()
@@ -44,7 +45,8 @@ func handler(w http.ResponseWriter, r *http.Request) {
 
 	// Access service account information if needed
 	serviceAccountEmail := string(serviceAccountSecret.Payload.Data)
-	// ...
+	// ... use serviceAccountEmail further
+
 }
 
 func main() {

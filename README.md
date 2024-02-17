@@ -31,6 +31,30 @@ To use this CI/CD pipeline for your project, follow these steps:
 2. Configure the `ci.yml` file as needed, especially the environment variables for Google Cloud credentials.
 3. Commit and push your changes to the `main` branch.
 
+## Libraries Used
+
+- **context:** 
+  The `context` package is used for managing and canceling long-running operations, such as API requests.
+
+- **fmt:** 
+  The `fmt` package is Go's standard input/output library and is used here for printing error messages.
+
+- **net/http:** 
+  The `net/http` package is used for building HTTP servers and clients.
+
+- **os:** 
+  The `os` package provides a platform-independent interface to operating system functionality, such as environment variables.
+
+- **cloud.google.com/go/secretmanager/apiv1:** 
+  This package is part of the Google Cloud client libraries for Go and provides an API for interacting with Google Cloud's Secret Manager service.
+
+- **cloud.google.com/go/secretmanager/apiv1/secretmanagerpb:** 
+  This package contains protocol buffer definitions used by the Secret Manager API.
+
+- **google.golang.org/api/option:** 
+  This package provides options for configuring Google API clients, such as specifying credentials.
+
+
 ## Security Considerations
 - Ensure that sensitive information such as service account names and credentials are securely stored and managed, preferably using tools like Google Secret Manager.
 - Use least privilege access for service accounts and APIs to minimize the risk of unauthorized access.
